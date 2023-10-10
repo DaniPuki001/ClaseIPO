@@ -1,0 +1,77 @@
+import java.util.Scanner;
+
+public class Libreria {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Paso 1: Solicitar cantidad de libros en el catálogo
+        System.out.print("Introduce la cantidad de libros en el catálogo: ");
+        int numLibros = sc.nextInt();
+
+        // Declarar arrays para almacenar ISBN y cantidad de ejemplares
+        String[] isbn = new String[numLibros];
+        int[] ejemplares = new int[numLibros];
+
+        // Paso 2: Solicitar ISBN de cada libro y verificar que no se repita
+        for (int i = 0; i < numLibros; i++) {
+            boolean isbnRepetido;
+            do {
+                isbnRepetido = false;
+                System.out.print("Introduce el ISBN del libro " + (i+1) + ": ");
+                String nuevoIsbn = sc.next();
+                for (int j = 0; j < i; j++) {
+                    if (isbn[j].equals(nuevoIsbn)) {
+                        System.out.println("ISBN repetido. Introduce un ISBN válido.");
+                        isbnRepetido = true;
+                        break;
+                    }
+                }
+                if (!isbnRepetido) {
+                    isbn[i] = nuevoIsbn;
+                }
+            } while (isbnRepetido);
+        }
+
+        // Paso 3: Solicitar cantidad de ejemplares de cada libro
+        for (int i = 0; i < numLibros; i++) {
+            System.out.print("Introduce el número de ejemplares del libro con ISBN " + isbn[i] + ": ");
+            ejemplares[i] = sc.nextInt();
+        }
+
+        // Paso 4: Venta de libros
+        String respuesta;
+        do {
+            System.out.print("Introduce el ISBN del libro que desea comprar: ");
+            String isbnVenta = sc.next();
+            int indiceVenta = -1;
+            for (int i = 0; i < numLibros; i++) {
+                if (isbn[i].equals(isbnVenta)) {
+                    indiceVenta = i;
+                    break;
+                }
+            }
+            if (indiceVenta == -1) {
+                System.out.println("No existe un libro con el ISBN " + isbnVenta);
+            } else {
+                System.out.print("Introduce la cantidad de ejemplares que desea comprar: ");
+                int cantidadVenta = sc.nextInt();
+                if (ejemplares[indiceVenta] >= cantidadVenta) {
+                    ejemplares[indiceVenta] -= cantidadVenta;
+                    System.out.println("Venta realizada con éxito.");
+                } else {
+                    System.out.println("No hay suficientes ejemplares disponibles para realizar la venta.");
+                }
+            }
+            System.out.print("¿Desea realizar otra venta? (SI/NO): ");
+            respuesta = sc.next();
+        } while (respuesta.equalsIgnoreCase("SI"));
+
+        // Paso 6: Mostrar listado de libros y cantidad de ejemplares disponibles
+        System.out.println("Listado de libros y cantidad de ejemplares disponibles:");
+        for (int i = 0; i < numLibros; i++) {
+            System.out.println("ISBN: " + isbn[i] + " - Ejemplares disponibles: " + ejemplares[i]);
+        }
+
+        sc.close();
+    }
+}
